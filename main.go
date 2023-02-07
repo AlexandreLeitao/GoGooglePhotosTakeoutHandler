@@ -20,7 +20,14 @@ func main() {
 	// iterate(dirToIterate)
 
 	allFolders := getFolders(dirToIterate)
+	allFoldersStrings := getFoldersStrings(allFolders)
 	parentFolders := getParentFolders(allFolders)
+
+	distinctFolders := make([]string, 0)
+
+	for _, x := range allFolders {
+
+	}
 
 	for _, i := range parentFolders {
 		fmt.Println(i.Name())
@@ -72,4 +79,11 @@ func getParentFolders(folders []os.FileInfo) []os.FileInfo {
 		}
 	}
 	return parentFolders
+}
+
+func getFoldersStrings(folders []os.FileInfo) []string {
+	strings := make([]string, 0)
+	for _, i := range folders {
+		strings = append(strings, i.Name())
+	}
 }
