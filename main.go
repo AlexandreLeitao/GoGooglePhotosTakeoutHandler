@@ -77,7 +77,7 @@ func getFoldersStrings(folders []os.FileInfo) []string {
 	return strings
 }
 
-func SliceContains(slice []string, value string) bool {
+func sliceContains(slice []string, value string) bool {
 	for _, x := range slice {
 		if x == value {
 			return true
@@ -108,7 +108,7 @@ func prepareCommonStructure(dirToIterate string, rootToProcessTo string) {
 	distinctFolders := make([]string, 0)
 
 	for _, x := range allFoldersStrings {
-		if !SliceContains(distinctFolders, x) && !SliceContains(parentFoldersStrings, x) {
+		if !sliceContains(distinctFolders, x) && !sliceContains(parentFoldersStrings, x) {
 			distinctFolders = append(distinctFolders, x)
 		}
 	}
