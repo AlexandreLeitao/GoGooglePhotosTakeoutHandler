@@ -16,6 +16,7 @@ func main() {
 
 	fmt.Println(currentDirectory)
 	//dirToIterate := "B:\\GoogleTakeout\\Google Photos\\Extracted"
+	// rootToProcessTo := "B:\\GoogleTakeout\\Google Photos\\Extracted\\Processed"
 	dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
 	rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
 	// iterate(dirToIterate)
