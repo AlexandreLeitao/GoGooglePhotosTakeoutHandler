@@ -3,6 +3,8 @@
 
 A Package to agreggate multiple folders with common leves into one single folder with all the data. 
 
+To Run the project just run - go run .
+
 
 
 ## Screenshots

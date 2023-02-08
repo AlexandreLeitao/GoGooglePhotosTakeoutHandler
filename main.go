@@ -17,10 +17,14 @@ func main() {
 	fmt.Println(currentDirectory)
 	//dirToIterate := "B:\\GoogleTakeout\\Google Photos\\Extracted"
 	// rootToProcessTo := "B:\\GoogleTakeout\\Google Photos\\Extracted\\Processed"
-	dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
-	rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
+	// dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
+	// rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
 	// iterate(dirToIterate)
-	prepareCommonStructure(dirToIterate, rootToProcessTo)
+
+	//prepareCommonStructure(dirToIterate, rootToProcessTo)
+
+	fmt.Print(createDummyStructure())
+
 }
 
 func iterate(path string) {
@@ -76,28 +80,6 @@ func getFoldersStrings(folders []os.FileInfo) []string {
 		strings = append(strings, i.Name())
 	}
 	return strings
-}
-
-func sliceContains(slice []string, value string) bool {
-	for _, x := range slice {
-		if x == value {
-			return true
-		}
-	}
-	return false
-}
-
-// exists returns whether the given file or directory exists
-func exists(path string) bool {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true
-	}
-	if os.IsNotExist(err) {
-		return false
-	}
-	fmt.Println(err)
-	return false
 }
 
 func prepareCommonStructure(dirToIterate string, rootToProcessTo string) {
