@@ -26,7 +26,7 @@ func createDummyStructure() structure {
 }
 
 func (s structure) makeYearFolderStructure(year string) {
-	root := s.getRoot()
+	//root := s.getRoot()
 
 }
 
