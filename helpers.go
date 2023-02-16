@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 )
@@ -28,14 +29,30 @@ func exists(path string) bool {
 	return false
 }
 
-func moveFile(file string, oldPath string, newPath string) bool {
+// Move file based on paramenters either moves a file from a src to a dest or copies the file from the src to the dest
+func moveFile(file string, oldPath string, newPath string, isCopy bool) bool {
 
-	err := os.Rename(oldPath+"\\"+file, newPath+"\\"+file)
+	if isCopy {
+		bytesRead, err := ioutil.ReadFile(oldPath + "\\" + file)
 
-	if err != nil {
-		log.Fatal(err)
-		return false
+		if err != nil {
+			log.Fatal(err)
+			return false
+		}
+
+		err = ioutil.WriteFile(newPath+"\\"+file, bytesRead, 0644)
+
+		if err != nil {
+			log.Fatal(err)
+			return false
+		}
+	} else {
+		err := os.Rename(oldPath+"\\"+file, newPath+"\\"+file)
+
+		if err != nil {
+			log.Fatal(err)
+			return false
+		}
 	}
-
 	return true
 }

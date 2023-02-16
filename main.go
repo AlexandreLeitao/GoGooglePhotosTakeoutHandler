@@ -9,6 +9,9 @@ import (
 )
 
 func main() {
+	//To be replaced with prompt
+	isCopy := true
+
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +38,7 @@ func main() {
 
 	x, y := mapperObj.getCorrespondentFolder("Important Shit")
 
-	moveFile("The-Dark-Angel-HD-Wallpaper-HD-1080p3.jpg", "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\takeout-20230205T163750Z-001\\Google Fotos\\Photos from 2007", "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed\\Photos from 2007")
+	moveFile("The-Dark-Angel-HD-Wallpaper-HD-1080p3.jpg", "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\takeout-20230205T163750Z-001\\Google Fotos\\Photos from 2007", "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed\\Photos from 2007", isCopy)
 
 	// fmt.Print(createDummyStructure())
 	fmt.Printf("%+v \r\r\r", x)
