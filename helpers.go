@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -25,4 +26,16 @@ func exists(path string) bool {
 	}
 	fmt.Println(err)
 	return false
+}
+
+func moveFile(file string, oldPath string, newPath string) bool {
+
+	err := os.Rename(oldPath+"\\"+file, newPath+"\\"+file)
+
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+
+	return true
 }

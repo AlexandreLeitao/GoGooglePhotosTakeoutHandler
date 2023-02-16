@@ -17,13 +17,29 @@ func main() {
 	fmt.Println(currentDirectory)
 	//dirToIterate := "B:\\GoogleTakeout\\Google Photos\\Extracted"
 	// rootToProcessTo := "B:\\GoogleTakeout\\Google Photos\\Extracted\\Processed"
-	// dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
-	// rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
+	dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
+	rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
 	// iterate(dirToIterate)
 
-	//prepareCommonStructure(dirToIterate, rootToProcessTo)
+	prepareCommonStructure(dirToIterate, rootToProcessTo)
 
-	fmt.Print(createDummyStructure())
+	of, _ := os.Lstat(dirToIterate)
+	nf, _ := os.Lstat(rootToProcessTo)
+
+	mapperObj := mapper{
+		orginalFolder: of,
+		originalPath:  dirToIterate,
+		newFolder:     nf,
+		newPath:       rootToProcessTo,
+	}
+
+	x, y := mapperObj.getCorrespondentFolder("Important Shit")
+
+	moveFile("The-Dark-Angel-HD-Wallpaper-HD-1080p3.jpg", "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\takeout-20230205T163750Z-001\\Google Fotos\\Photos from 2007", "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed\\Photos from 2007")
+
+	// fmt.Print(createDummyStructure())
+	fmt.Printf("%+v \r\r\r", x)
+	fmt.Println(y)
 
 }
 
