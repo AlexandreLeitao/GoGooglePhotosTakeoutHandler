@@ -80,3 +80,11 @@ func UpdateFileDateWithTimeStamp(filePath string, timestamp int64) {
 		return
 	}
 }
+
+func FileExists(filename string, path string) bool {
+	if _, err := os.Stat(path + "\\" + filename); err == nil {
+		return true
+	} else {
+		return false
+	}
+}

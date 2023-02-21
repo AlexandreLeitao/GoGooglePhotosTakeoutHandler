@@ -18,8 +18,10 @@ func main() {
 	isCopy := true
 
 	// Home
-	dirToIterate := "B:\\GoogleTakeout\\Google Photos\\Extracted"
-	rootToProcessTo := "B:\\GoogleTakeout\\Google Photos\\Processed"
+	// dirToIterate := "B:\\GoogleTakeout\\Google Photos\\Extracted"
+	// rootToProcessTo := "B:\\GoogleTakeout\\Google Photos\\Processed"
+	dirToIterate := "C:\\Users\\alexs\\Downloads\\GoogleTakeout\\Extracted"
+	rootToProcessTo := "C:\\Users\\alexs\\Downloads\\GoogleTakeout\\Processed"
 
 	// Work
 	// dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
@@ -33,6 +35,8 @@ func main() {
 
 	//Moving Files
 	moveAllFilesToCommonStructure(dirToIterate, rootToProcessTo, isCopy)
+
+	fmt.Println("FIMMMMM!!!!!")
 }
 
 // Calculates Total Files and Folders to be processed by the application
@@ -148,15 +152,20 @@ func moveAllFilesToCommonStructure(dirToIterate string, rootToProcessTo string, 
 		}
 
 		if !info.IsDir() {
+			fileName := info.Name()
 			parentFolder := filepath.Dir(path)
 
 			parentFolderName := filepath.Base(parentFolder)
 			fmt.Println(parentFolderName)
-			fmt.Printf("File: %s\n", info.Name())
+			fmt.Printf("File: %s\n", fileName)
 
 			_, newFolderPath := mapperObj.getCorrespondentFolder(parentFolderName)
 
-			moveFile(info.Name(), parentFolder, newFolderPath, isCopy)
+			if !FileExists(fileName, newFolderPath) {
+				moveFile(fileName, parentFolder, newFolderPath, isCopy)
+			} else {
+				fmt.Printf("%s Skipped\n", fileName)
+			}
 		}
 		return nil
 	})
