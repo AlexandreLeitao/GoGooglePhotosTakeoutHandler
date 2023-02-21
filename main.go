@@ -16,17 +16,11 @@ func main() {
 	}
 
 	fmt.Println(currentDirectory)
-	isCopy := true
 
-	// Home
-	// dirToIterate := "B:\\GoogleTakeout\\Google Photos\\Extracted"
-	// rootToProcessTo := "B:\\GoogleTakeout\\Google Photos\\Processed"
+	//Configurations
+	isCopy := true
 	dirToIterate := "C:\\Users\\alexs\\Downloads\\GoogleTakeout\\Extracted"
 	rootToProcessTo := "C:\\Users\\alexs\\Downloads\\GoogleTakeout\\Processed"
-
-	// Work
-	// dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
-	// rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
 
 	totalFiles, totalFolders := iteratePreProcessing(rootToProcessTo)
 	fmt.Printf("Total files: %d, Total folders: %d\n", totalFiles, totalFolders)
