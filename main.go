@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 )
 
 func main() {
@@ -27,8 +28,8 @@ func main() {
 	// dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
 	// rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
 
-	// totalFiles, totalFolders := iteratePreProcessing(dirToIterate)
-	// fmt.Printf("Total files: %d, Total folders: %d\n", totalFiles, totalFolders)
+	totalFiles, totalFolders := iteratePreProcessing(rootToProcessTo)
+	fmt.Printf("Total files: %d, Total folders: %d\n", totalFiles, totalFolders)
 
 	//Setup
 	prepareCommonStructure(dirToIterate, rootToProcessTo)
@@ -36,7 +37,10 @@ func main() {
 	//Moving Files
 	moveAllFilesToCommonStructure(dirToIterate, rootToProcessTo, isCopy)
 
-	fmt.Println("FIMMMMM!!!!!")
+	//Finish File Date Handling
+	iteratePostProcessing(rootToProcessTo)
+
+	fmt.Println("The end!")
 }
 
 // Calculates Total Files and Folders to be processed by the application
@@ -170,4 +174,31 @@ func moveAllFilesToCommonStructure(dirToIterate string, rootToProcessTo string, 
 		return nil
 	})
 
+}
+
+// Updates all files in Final Folder with their correspondent dates from json
+func iteratePostProcessing(dirToIterate string) {
+
+	filepath.Walk(dirToIterate, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		if !info.IsDir() {
+			fileName := info.Name()
+			fileExtension := filepath.Ext(fileName)
+			if fileExtension != ".json" {
+				//GetJson and update file date
+
+				if _, err := os.Stat(path + ".json"); !os.IsNotExist(err) {
+					resultJsonObj := GetFileJson(path + ".json")
+					date, _ := strconv.ParseInt(resultJsonObj.PhotoTakenTime.Timestamp, 10, 64)
+					UpdateFileDateWithTimeStamp(path, date)
+				}
+			}
+		} else {
+			fmt.Println("Folder: " + info.Name())
+		}
+		return nil
+	})
 }
