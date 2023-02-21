@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -12,10 +11,6 @@ type mapper struct {
 	originalPath  string
 	newFolder     os.FileInfo
 	newPath       string
-}
-
-func Test() {
-	fmt.Println("Test")
 }
 
 func (m mapper) getCorrespondentFolder(folderName string) (os.FileInfo, string) {

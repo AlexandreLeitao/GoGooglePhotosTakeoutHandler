@@ -9,59 +9,57 @@ import (
 )
 
 func main() {
-	//To be replaced with prompt
-	isCopy := true
-
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println(currentDirectory)
-	//dirToIterate := "B:\\GoogleTakeout\\Google Photos\\Extracted"
-	// rootToProcessTo := "B:\\GoogleTakeout\\Google Photos\\Extracted\\Processed"
-	dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
-	rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
-	// iterate(dirToIterate)
+	isCopy := true
 
+	// Home
+	dirToIterate := "B:\\GoogleTakeout\\Google Photos\\Extracted"
+	rootToProcessTo := "B:\\GoogleTakeout\\Google Photos\\Processed"
+
+	// Work
+	// dirToIterate := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder"
+	// rootToProcessTo := "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed"
+
+	// totalFiles, totalFolders := iteratePreProcessing(dirToIterate)
+	// fmt.Printf("Total files: %d, Total folders: %d\n", totalFiles, totalFolders)
+
+	//Setup
 	prepareCommonStructure(dirToIterate, rootToProcessTo)
 
-	of, _ := os.Lstat(dirToIterate)
-	nf, _ := os.Lstat(rootToProcessTo)
-
-	mapperObj := mapper{
-		orginalFolder: of,
-		originalPath:  dirToIterate,
-		newFolder:     nf,
-		newPath:       rootToProcessTo,
-	}
-
-	x, y := mapperObj.getCorrespondentFolder("Important Shit")
-
-	moveFile("The-Dark-Angel-HD-Wallpaper-HD-1080p3.jpg", "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\takeout-20230205T163750Z-001\\Google Fotos\\Photos from 2007", "C:\\Users\\alexandre.leitao\\OneDrive - Havas\\Documents\\TestFolder\\Processed\\Photos from 2007", isCopy)
-
-	// fmt.Print(createDummyStructure())
-	fmt.Printf("%+v \r\r\r", x)
-	fmt.Println(y)
-
+	//Moving Files
+	moveAllFilesToCommonStructure(dirToIterate, rootToProcessTo, isCopy)
 }
 
-func iterate(path string) {
-	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+// Calculates Total Files and Folders to be processed by the application
+func iteratePreProcessing(dirToIterate string) (int, int) {
+
+	totalFiles, totalFolders := 0, 0
+
+	filepath.Walk(dirToIterate, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			log.Fatalf(err.Error())
 		}
 
 		if info.IsDir() {
-			fmt.Printf("Folder: %s\n", info.Name())
+			totalFolders += 1
+			//fmt.Printf("Folder: %s\n", info.Name())
 		} else {
-			fmt.Printf("File : %s\n", info.Name())
+			totalFiles += 1
+			//fmt.Printf("File : %s\n", info.Name())
+			//fmt.Printf("%+v \r", info)
 		}
 
 		return nil
 	})
+	return totalFiles, totalFolders
 }
 
+// Returns All folders in path in a slice of fileInfos
 func getFolders(path string) []os.FileInfo {
 
 	folders := make([]os.FileInfo, 0)
@@ -80,6 +78,7 @@ func getFolders(path string) []os.FileInfo {
 	return folders
 }
 
+// Returns all "Parent Folders" that obey the regex rule
 func getParentFolders(folders []os.FileInfo) []os.FileInfo {
 	parentFolders := make([]os.FileInfo, 0)
 
@@ -93,6 +92,7 @@ func getParentFolders(folders []os.FileInfo) []os.FileInfo {
 	return parentFolders
 }
 
+// Converts slice of FileInfos to slice of Strings with each fileinfo name
 func getFoldersStrings(folders []os.FileInfo) []string {
 	strings := make([]string, 0)
 	for _, i := range folders {
@@ -101,6 +101,7 @@ func getFoldersStrings(folders []os.FileInfo) []string {
 	return strings
 }
 
+// Creates or updates the Common Structure
 func prepareCommonStructure(dirToIterate string, rootToProcessTo string) {
 	allFolders := getFolders(dirToIterate)
 	allFoldersStrings := getFoldersStrings(allFolders)
@@ -127,4 +128,37 @@ func prepareCommonStructure(dirToIterate string, rootToProcessTo string) {
 		}
 		fmt.Println(i)
 	}
+}
+
+// Moves all files to correspondent Folder
+func moveAllFilesToCommonStructure(dirToIterate string, rootToProcessTo string, isCopy bool) {
+	//Maps Correspondent folders in the unified strructure
+	of, _ := os.Lstat(dirToIterate)
+	nf, _ := os.Lstat(rootToProcessTo)
+	mapperObj := mapper{
+		orginalFolder: of,
+		originalPath:  dirToIterate,
+		newFolder:     nf,
+		newPath:       rootToProcessTo,
+	}
+
+	filepath.Walk(dirToIterate, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		if !info.IsDir() {
+			parentFolder := filepath.Dir(path)
+
+			parentFolderName := filepath.Base(parentFolder)
+			fmt.Println(parentFolderName)
+			fmt.Printf("File: %s\n", info.Name())
+
+			_, newFolderPath := mapperObj.getCorrespondentFolder(parentFolderName)
+
+			moveFile(info.Name(), parentFolder, newFolderPath, isCopy)
+		}
+		return nil
+	})
+
 }

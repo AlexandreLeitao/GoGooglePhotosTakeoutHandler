@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 )
 
 func sliceContains(slice []string, value string) bool {
@@ -55,4 +56,27 @@ func moveFile(file string, oldPath string, newPath string, isCopy bool) bool {
 		}
 	}
 	return true
+}
+
+// Updates the file passed as path with the date provided as a parameter
+func UpdateFileDate(filePath string, updateDate time.Time) {
+	// Update the file's creation time
+	err := os.Chtimes(filePath, updateDate, updateDate)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+// Updates the file passed as path with the unix timestamp provided as a parameter
+func UpdateFileDateWithTimeStamp(filePath string, timestamp int64) {
+
+	updateDate := time.Unix(timestamp, 0)
+
+	// Update the file's creation time
+	err := os.Chtimes(filePath, updateDate, updateDate)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
