@@ -4,7 +4,7 @@ Project in go to unify and fix file dates from a google takeout of Google Photos
 
 ## Usage
 
-Update all variables to your own enviorments.
+Update all variables to your own environments.
 
 Update isCopy, using true to create a copy of the files and false to move them to new directory.
 
