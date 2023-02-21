@@ -1,17 +1,37 @@
+# Google Photos Takeout Handler
 
-# GoFolderProcessor
+Project in go to unify and fix file dates from a google takeout of Google Photos data.~
 
-A Package to agreggate multiple folders with common leves into one single folder with all the data. 
+## Usage
 
-To Run the project just run - go run .
+Update all variables to your own enviorments.
 
+Update isCopy, using true to create a copy of the files and false to move them to new directory.
 
+This will be improved in newer versions to give either an UI or a console input to provide variables.
 
-## Screenshots
+```go
+isCopy := true
 
-Before
-![App Screenshot](https://i.imgur.com/cF1dMtw.png)
+dirToIterate := "<yourpath>\\Extracted"
+rootToProcessTo := "<yourpath>\\Processed"
+```
 
-After
-![App Screenshot](https://i.imgur.com/hClPRoH.png)
+## Running
 
+```bash
+go run .
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+## Tests
+
+TBD
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
