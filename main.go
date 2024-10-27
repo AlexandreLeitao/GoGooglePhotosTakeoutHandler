@@ -1,21 +1,25 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
-	"net/http"
 	_ "net/http/pprof"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func main() {
+	reader := bufio.NewReader(os.Stdin)
 
-	go func() {
-		_ = http.ListenAndServe(":8848", nil)
-	}()
+	fmt.Println("Please input path to operate in:")
+	// dirToIterateInput, _ := reader.ReadString('\n')
+	dirToIterateInput := "C:\\Users\\alexs\\Downloads\\GoogleTakeout\\Extracted"
+	fmt.Println("Do you want to copy files instead of moving them? (Y/N)")
+	isCopyInput, _ := reader.ReadString('\n')
 
 	currentDirectory, err := os.Getwd()
 	if err != nil {
@@ -25,9 +29,16 @@ func main() {
 	fmt.Println(currentDirectory)
 
 	//Configurations
-	isCopy := true
-	dirToIterate := "C:\\Users\\alexs\\Downloads\\GoogleTakeout\\Extracted"
-	rootToProcessTo := "C:\\Users\\alexs\\Downloads\\GoogleTakeout\\Processed"
+	isCopy := strings.EqualFold(isCopyInput, "Y")
+	dirToIterate := filepath.Clean(dirToIterateInput)
+	rootToProcessTo := filepath.Join(dirToIterateInput, "Processed")
+
+	if !exists(rootToProcessTo) {
+		fmt.Println("Creating folder:", rootToProcessTo)
+		os.MkdirAll(rootToProcessTo, 0755)
+	} else {
+		fmt.Println("Folder already exists:", rootToProcessTo)
+	}
 
 	totalFiles, totalFolders := iteratePreProcessing(rootToProcessTo)
 	fmt.Printf("Total files: %d, Total folders: %d\n", totalFiles, totalFolders)
