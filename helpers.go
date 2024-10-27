@@ -70,13 +70,16 @@ func UpdateFileDate(filePath string, updateDate time.Time) {
 
 // Updates the file passed as path with the unix timestamp provided as a parameter
 func UpdateFileDateWithTimeStamp(filePath string, timestamp int64) {
-
+	// Use the timestamp to set the access and modification times
 	updateDate := time.Unix(timestamp, 0)
 
-	// Update the file's creation time
+	// Attempt to update the file's access and modification times
 	err := os.Chtimes(filePath, updateDate, updateDate)
+	fmt.Printf("Attempting to update file: %s to timestamp: %v\n", filePath, updateDate)
+
+	// Check if Chtimes succeeded
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("Error updating file times: %v\n", err)
 		return
 	}
 }

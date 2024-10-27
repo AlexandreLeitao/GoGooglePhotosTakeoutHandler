@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -10,6 +12,11 @@ import (
 )
 
 func main() {
+
+	go func() {
+		_ = http.ListenAndServe(":8848", nil)
+	}()
+
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
@@ -183,11 +190,23 @@ func iteratePostProcessing(dirToIterate string) {
 			fileExtension := filepath.Ext(fileName)
 			if fileExtension != ".json" {
 				//GetJson and update file date
+				finalJsonPath := findMetadataFile(path)
 
-				if _, err := os.Stat(path + ".json"); !os.IsNotExist(err) {
-					resultJsonObj := GetFileJson(path + ".json")
-					date, _ := strconv.ParseInt(resultJsonObj.PhotoTakenTime.Timestamp, 10, 64)
-					UpdateFileDateWithTimeStamp(path, date)
+				if _, err := os.Stat(finalJsonPath); !os.IsNotExist(err) {
+					resultJsonObj := GetFileJson(finalJsonPath)
+					if resultJsonObj.PhotoTakenTime.Timestamp != "" {
+						date, _ := strconv.ParseInt(resultJsonObj.PhotoTakenTime.Timestamp, 10, 64)
+						UpdateFileDateWithTimeStamp(path, date)
+						fmt.Print("- PhotoTakenTime.Timestamp")
+					} else {
+						if resultJsonObj.CreationTime.Timestamp != "" {
+							date, _ := strconv.ParseInt(resultJsonObj.PhotoTakenTime.Timestamp, 10, 64)
+							UpdateFileDateWithTimeStamp(path, date)
+							fmt.Print("- CreationTime.Timestamp")
+						} else {
+							fmt.Println(path, " - Json Not found")
+						}
+					}
 				}
 			}
 		} else {
@@ -195,4 +214,36 @@ func iteratePostProcessing(dirToIterate string) {
 		}
 		return nil
 	})
+
+}
+
+func findMetadataFile(basePath string) string {
+	// Check for any file ending in ".metadata.json" in the same directory
+	dir := filepath.Dir(basePath)
+	baseFileName := filepath.Base(basePath)
+	pattern := filepath.Join(dir, baseFileName+".*.json")
+
+	// Use glob to find all matching patterns
+	matches, err := filepath.Glob(pattern)
+	if err != nil {
+		log.Println("Error matching pattern:", err)
+		return ""
+	}
+	// Return the first match found, if any
+	if len(matches) > 0 {
+		return matches[0]
+	}
+
+	// If no matches found, look for files with a similar base name and `.json` suffix
+	pattern = filepath.Join(dir, baseFileName+"*.json")
+	matches, err = filepath.Glob(pattern)
+	if err != nil {
+		log.Println("Error matching pattern:", err)
+		return ""
+	}
+	if len(matches) > 0 {
+		// Assuming we take the first match based on variations
+		return matches[0]
+	}
+	return ""
 }
