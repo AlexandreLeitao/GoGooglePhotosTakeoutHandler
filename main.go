@@ -211,9 +211,13 @@ func iteratePostProcessing(dirToIterate string) {
 						fmt.Print("- PhotoTakenTime.Timestamp")
 					} else {
 						if resultJsonObj.CreationTime.Timestamp != "" {
-							date, _ := strconv.ParseInt(resultJsonObj.PhotoTakenTime.Timestamp, 10, 64)
-							UpdateFileDateWithTimeStamp(path, date)
-							fmt.Print("- CreationTime.Timestamp")
+							date, parseErr := strconv.ParseInt(resultJsonObj.CreationTime.Timestamp, 10, 64)
+							if parseErr != nil {
+								log.Printf("Failed to parse CreationTime timestamp for %s: %v", path, parseErr)
+							} else {
+								UpdateFileDateWithTimeStamp(path, date)
+								fmt.Print("- CreationTime.Timestamp")
+							}
 						} else {
 							fmt.Println(path, " - Json Not found")
 						}
