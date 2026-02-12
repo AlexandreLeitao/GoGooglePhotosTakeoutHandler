@@ -29,7 +29,7 @@ func main() {
 	fmt.Println(currentDirectory)
 
 	//Configurations
-	isCopy := strings.EqualFold(isCopyInput, "Y")
+	isCopy := strings.EqualFold(strings.TrimSpace(isCopyInput), "Y")
 	dirToIterate := filepath.Clean(dirToIterateInput)
 	rootToProcessTo := filepath.Join(dirToIterateInput, "Processed")
 
